@@ -1,0 +1,43 @@
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <div class="header">
+      <img src="assets/icon/favicon.png" alt="App Logo" class="logo">
+      <h1>Bienvenido de Nuevo</h1>
+      <p>Sigue construyendo tus mejores hábitos.</p>
+    </div>
+
+    <form #loginForm="ngForm" (ngSubmit)="onLogin()">
+      <ion-item lines="full">
+        <ion-icon name="person-circle-outline" slot="start"></ion-icon>
+        <ion-input
+          label="Usuario"
+          labelPlacement="floating"
+          name="username"
+          type="text"
+          required
+          [(ngModel)]="loginData.username"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item lines="full">
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        <ion-input
+          label="Contraseña"
+          labelPlacement="floating"
+          name="password"
+          type="password"
+          required
+          [(ngModel)]="loginData.password"
+        ></ion-input>
+      </ion-item>
+
+      <ion-button type="submit" expand="block" class="ion-margin-top main-action-button" [disabled]="loginForm.invalid">
+        Entrar
+      </ion-button>
+    </form>
+
+    <ion-button expand="block" fill="clear" routerLink="/register" class="secondary-action-button">
+      ¿No tienes cuenta? <span class="bold-link">Regístrate</span>
+    </ion-button>
+  </div>
+</ion-content>

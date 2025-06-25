@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Mis Hábitos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-input
+      label="Nuevo Hábito"
+      labelPlacement="floating"
+      placeholder="Ej: Leer 30 minutos"
+      [(ngModel)]="newHabitName"
+    ></ion-input>
+  </ion-item>
+  <ion-button expand="block" (click)="addHabit()" class="ion-margin-top">
+    <ion-icon name="add-circle" slot="start"></ion-icon>
+    Añadir Hábito
+  </ion-button>
+
+  <ion-list class="ion-margin-top">
+    <ion-item *ngFor="let habit of habits">
+      <ion-label>{{ habit.name }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
