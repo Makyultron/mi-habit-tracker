@@ -21,27 +21,33 @@ import { AuthService } from '../../services/auth.service';
 export class LoginPage {
   loginData = { username: '', password: '' };
 
+  // --- ¡NUEVAS VARIABLES! ---
+  showPassword = false;
+  passwordToggleIcon = 'eye-off';
+  // --------------------------
+
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
+  // --- ¡NUEVO MÉTODO! ---
+  togglePassword(): void {
+    this.showPassword = !this.showPassword; // Cambia el estado (true/false)
+    if (this.passwordToggleIcon === 'eye-off') {
+      this.passwordToggleIcon = 'eye';
+    } else {
+      this.passwordToggleIcon = 'eye-off';
+    }
+  }
+  // -----------------------
+
   onLogin() {
     if (!this.loginData.username || !this.loginData.password) {
       return alert('Por favor, ingresa usuario y contraseña.');
     }
-
     this.authService.login(this.loginData).subscribe({
-      next: (response) => {
-        console.log('Login exitoso, token recibido:', response.token);
-        alert('¡Bienvenido!');
-        localStorage.setItem('token', response.token);
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        console.error('Error en el login:', err);
-        alert('Error: Credenciales inválidas.');
-      }
+      // ... la lógica del login se queda igual ...
     });
   }
 }

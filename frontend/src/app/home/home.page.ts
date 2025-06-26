@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HabitService } from '../services/habit'; // <-- RUTA CORREGIDA
+import { Router } from '@angular/router';
+import { HabitService } from '../services/habit';
+import { HttpClientModule } from '@angular/common/http';
 
-// Importamos las piezas de Ionic que usaremos en el HTML
+// Importamos TODAS las piezas de Ionic que usaremos en el HTML
 import {
   IonHeader,
   IonToolbar,
@@ -15,6 +17,7 @@ import {
   IonInput,
   IonButton,
   IonIcon,
+  IonItemDivider // <-- La pieza que faltaba
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -22,10 +25,10 @@ import {
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  // Añadimos los componentes de Ionic a la lista de imports
   imports: [
     CommonModule,
     FormsModule,
+    HttpClientModule,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -36,13 +39,14 @@ import {
     IonInput,
     IonButton,
     IonIcon,
+    IonItemDivider // <-- Y la añadimos aquí
   ],
 })
 export class HomePage implements OnInit {
   habits: any[] = [];
   newHabitName: string = '';
 
-  constructor(private habitService: HabitService) {}
+  constructor(private habitService: HabitService, private router: Router) {}
 
   ngOnInit() {
     this.loadHabits();
@@ -50,20 +54,20 @@ export class HomePage implements OnInit {
 
   loadHabits() {
     this.habitService.getHabits().subscribe({
-      next: (data) => {
-        this.habits = data;
-        console.log('Hábitos cargados:', this.habits);
+      next: (data) => { this.habits = data; },
+      error: (err) => {
+        if (err.status === 401) { this.router.navigate(['/login']); }
+        else { console.error('Error al cargar hábitos', err); }
       },
-      error: (err) => console.error('Error al cargar hábitos', err),
     });
   }
 
   addHabit() {
-    if (!this.newHabitName.trim()) return; // No añadir si está vacío
+    if (!this.newHabitName.trim()) return;
     this.habitService.addHabit({ name: this.newHabitName }).subscribe({
       next: () => {
-        this.loadHabits(); // Recargamos la lista
-        this.newHabitName = ''; // Limpiamos el campo
+        this.loadHabits();
+        this.newHabitName = '';
       },
       error: (err) => console.error('Error al añadir hábito', err),
     });
