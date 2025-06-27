@@ -1,37 +1,53 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar>
     <ion-title>Mis Hábitos</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-item>
-    <ion-input
-      label="Nuevo Hábito"
-      labelPlacement="floating"
-      placeholder="Ej: Leer 30 minutos"
-      [(ngModel)]="newHabitName"
-      (keyup.enter)="addHabit()"
-    ></ion-input>
-  </ion-item>
-  <ion-button expand="block" (click)="addHabit()" class="ion-margin-top">
-    <ion-icon name="add-circle" slot="start"></ion-icon>
-    Añadir Hábito
-  </ion-button>
 
-  <ion-list class="ion-margin-top">
-    <ion-item-divider>
-      <ion-label>Hoy</ion-label>
-    </ion-item-divider>
+  <ion-card class="add-habit-card">
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-input
+          placeholder="¿Qué buen hábito iniciarás hoy?"
+          [(ngModel)]="newHabitName"
+          (keyup.enter)="addHabit()">
+        </ion-input>
+        <ion-button slot="end" fill="clear" (click)="addHabit()" [disabled]="!newHabitName.trim()">
+          <ion-icon slot="icon-only" name="add-circle" color="primary"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
 
-    <ion-item *ngFor="let habit of habits">
-      <ion-label>{{ habit.name }}</ion-label>
-    </ion-item>
+  <div class="ion-margin-top">
+    <ion-list-header>
+      <ion-label color="medium">Tus Metas</ion-label>
+    </ion-list-header>
 
-    <ion-item *ngIf="habits.length === 0">
-      <ion-label class="ion-text-center ion-text-wrap">
-        Aún no tienes hábitos. ¡Añade el primero para empezar!
-      </ion-label>
-    </ion-item>
-  </ion-list>
+    <div *ngIf="habits.length === 0" class="empty-state">
+      <ion-icon name="file-tray-outline" class="empty-icon"></ion-icon>
+      <h3>Lista vacía</h3>
+      <p>Añade tu primer hábito para empezar.</p>
+    </div>
+
+    <ion-card *ngFor="let habit of habits" [class.habit-card-completed]="habit.completed">
+      <ion-item lines="none" class="ion-no-padding">
+        <ion-checkbox
+          slot="start"
+          [checked]="habit.completed"
+          (ionChange)="toggleComplete(habit, $event)">
+        </ion-checkbox>
+        <ion-label [class.habit-completed]="habit.completed">
+          <h2>{{ habit.name }}</h2>
+          <p>Creado: {{ habit.createdAt | date:'shortDate' }}</p>
+        </ion-label>
+        <ion-button fill="clear" color="danger" (click)="deleteHabit(habit, $event)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-card>
+
+  </div>
 </ion-content>

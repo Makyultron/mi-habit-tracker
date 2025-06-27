@@ -7,7 +7,7 @@ const HabitSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User' // Esto lo conecta con nuestro modelo 'User'
   },
-  // El nombre del hábito (ej: "Leer 30 minutos")
+
   name: {
     type: String,
     required: true

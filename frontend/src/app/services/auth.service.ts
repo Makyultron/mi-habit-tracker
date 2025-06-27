@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   // La URL base de nuestro backend.
-  // ¡Recuerda reemplazarla con la URL de tu puerto 3001 en Codespaces!
   private backendUrl = 'https://literate-couscous-q5pvqpv5wjgh4px-3001.app.github.dev/api/auth';
 
   constructor(private http: HttpClient) { }

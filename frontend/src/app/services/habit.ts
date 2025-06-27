@@ -1,25 +1,43 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+
+// Definimos aquí mismo la estructura de un Hábito para tener todo junto
+export interface Habit {
+  _id: string;
+  name: string;
+  completed: boolean;
+  createdAt: Date;
+  user: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class HabitService {
-  // Reemplaza esta URL con la de tu puerto 3001
-  private backendUrl = 'https://literate-couscous-q5pvqv5wjgh4px-3001.app.github.dev/api/habits';
+  private backendUrl = `${environment.apiUrl}/habits`;
 
   constructor(private http: HttpClient) { }
 
-  getHabits(): Observable<any[]> {
+  private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('x-auth-token', token || '');
-    return this.http.get<any[]>(this.backendUrl, { headers });
+    return new HttpHeaders().set('x-auth-token', token || '');
   }
 
-  addHabit(habitData: { name: string }): Observable<any> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('x-auth-token', token || '');
-    return this.http.post(this.backendUrl, habitData, { headers });
+  getHabits(): Observable<Habit[]> {
+    return this.http.get<Habit[]>(this.backendUrl, { headers: this.getHeaders() });
+  }
+
+  addHabit(habitData: { name: string }): Observable<Habit> {
+    return this.http.post<Habit>(this.backendUrl, habitData, { headers: this.getHeaders() });
+  }
+
+  toggleHabitStatus(habitId: string): Observable<Habit> {
+    return this.http.put<Habit>(`${this.backendUrl}/${habitId}`, {}, { headers: this.getHeaders() });
+  }
+
+  deleteHabit(habitId: string): Observable<any> {
+    return this.http.delete(`${this.backendUrl}/${habitId}`, { headers: this.getHeaders() });
   }
 }

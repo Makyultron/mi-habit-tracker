@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonList,
-  IonItem, IonInput, IonButton, IonIcon
+  IonItem, IonInput, IonButton, IonIcon // IonIcon estaba faltando aquí
 } from '@ionic/angular/standalone';
 import { AuthService } from '../../services/auth.service';
 
@@ -20,34 +20,37 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginPage {
   loginData = { username: '', password: '' };
-
-  // --- ¡NUEVAS VARIABLES! ---
   showPassword = false;
-  passwordToggleIcon = 'eye-off';
-  // --------------------------
+  passwordToggleIcon = 'eye-off-outline'; 
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
-  // --- ¡NUEVO MÉTODO! ---
   togglePassword(): void {
-    this.showPassword = !this.showPassword; // Cambia el estado (true/false)
-    if (this.passwordToggleIcon === 'eye-off') {
-      this.passwordToggleIcon = 'eye';
+    this.showPassword = !this.showPassword;
+    if (this.passwordToggleIcon === 'eye-off-outline') {
+      this.passwordToggleIcon = 'eye-outline';
     } else {
-      this.passwordToggleIcon = 'eye-off';
+      this.passwordToggleIcon = 'eye-off-outline';
     }
   }
-  // -----------------------
 
   onLogin() {
     if (!this.loginData.username || !this.loginData.password) {
-      return alert('Por favor, ingresa usuario y contraseña.');
+      console.error('Por favor, ingresa usuario y contraseña.');
+      return;
     }
+
     this.authService.login(this.loginData).subscribe({
-      // ... la lógica del login se queda igual ...
+      next: (res) => {
+        localStorage.setItem('token', res.token);
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        console.error('Error en el login:', err);
+      }
     });
   }
 }

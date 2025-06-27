@@ -15,7 +15,7 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    // --- ¡ESTA LÍNEA ES LA QUE ARREGLA TODO EL ESTILO! ---
+    
     importProvidersFrom(IonicModule.forRoot({})),
     // ---------------------------------------------------
     provideRouter(routes),

@@ -1,16 +1,22 @@
-import { TestBed } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment'; // Importamos la configuración del entorno
 
-import { AuthService } from './auth.service';
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+  //  URL del archivo de entorno y le añadimos la ruta de autenticación
+  private backendUrl = `${environment.apiUrl}/auth`;
 
-describe('AuthService', () => {
-  let service: AuthService;
+  constructor(private http: HttpClient) { }
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(AuthService);
-  });
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.backendUrl}/register`, userData);
+  }
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+  login(userData: any): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${this.backendUrl}/login`, userData);
+  }
+}
